@@ -4,34 +4,58 @@ using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
+	private StepManager stepManager;
+
 	public Transform SpawnTransform;
     public GameObject[] pills;
-	
+	private bool waitFlag = true;
+
+	private void Start()
+	{
+		stepManager = GameObject.Find("GameManager").GetComponent<StepManager>();
+	}
+
 	private void Update()
 	{
-		if (CalculatePills() == true)
+		if(stepManager.CurrentStep == 1)
 		{
-			// Yeni spawn etme
-		}
-		else
-		{
-			// Spawn et
-			GameObject obj = Spawn();
+			if (CalculatePills() == true)
+			{
+				// Yeni spawn etme
+			}
+			else
+			{
+				// Spawn et
+				if(waitFlag == true)
+				{
+					StartCoroutine(Spawn());
+				}
+			}
 		}
 	}
 
 	// Ekranda ne kadar ilaç var hesaplamasını yapıyor eksikse spawn edicek bir tane daha
 	private bool CalculatePills()
 	{
-		GameObject[] obj = GameObject.FindGameObjectsWithTag("Pill");
-		if(obj.Length >= 10)
+		try
 		{
-			return true;
+			GameObject[] obj = GameObject.FindGameObjectsWithTag("Pill");
+			if (obj.Length >= 10)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 		}
-		else
+		catch(System.Exception ex)
 		{
+			Debug.LogError(ex.ToString());
 			return false;
 		}
+		return true;
+		
 	}
 
 	void SpawnPills()
@@ -39,10 +63,13 @@ public class Spawner : MonoBehaviour
 
 	}
 
-    public GameObject Spawn()
+    public IEnumerator Spawn()
 	{
+		waitFlag = false;
 		int rnd = Random.Range(0, pills.Length);
-		return Instantiate(pills[rnd], SpawnTransform.position, Quaternion.identity);
+		Instantiate(pills[rnd], SpawnTransform.position, Quaternion.identity);
+		yield return new WaitForSeconds(2);
+		waitFlag = true;
 	}
 
      

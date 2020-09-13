@@ -7,6 +7,8 @@ TagManager:
   - GameManager
   - Bottle
   - Step1
+  - Spawner
+  - Pill
   layers:
   - Default
   - TransparentFX

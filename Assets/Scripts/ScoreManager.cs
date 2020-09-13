@@ -35,6 +35,11 @@ public class ScoreManager : MonoBehaviour
     public void DescreasScore()
 	{
         Score -= descreasePoint;
+
+        if(Score < 0)
+		{
+            Score = 0;
+		}
 	}
 
 

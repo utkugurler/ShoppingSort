@@ -10,6 +10,7 @@ public class TouchDragDrop : MonoBehaviour
     private float zPosition;
     private Vector3 offset;
     private Camera camera;
+	private Rigidbody rb;
     private bool dragging = false; // TODO: Kategoriye göre draggable kapama açmaları kontrol edeceğiz!
 
 	[Space]
@@ -26,6 +27,7 @@ public class TouchDragDrop : MonoBehaviour
 		dragging = false;
 		camera = Camera.main;
 		zPosition = camera.WorldToScreenPoint(transform.position).z;
+		rb = GetComponent<Rigidbody>();
 	}
 
 	private void Update()
@@ -47,7 +49,18 @@ public class TouchDragDrop : MonoBehaviour
 			{
 				dragging = false;
 			}
-			
+			else if(this.gameObject.tag == "Pill")
+			{
+				if (dragging == true)
+				{
+					zPosition = camera.WorldToScreenPoint(new Vector3(0, 0, 0)).z;
+					rb.isKinematic = true;
+				}
+				else
+				{
+					rb.isKinematic = false;
+				}
+			}
 		}
 		else if(stepManager.CurrentStep == 2)
 		{
