@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Runtime;
 using UnityEngine;
 
 public class Spawner : MonoBehaviour
@@ -40,7 +41,8 @@ public class Spawner : MonoBehaviour
 		try
 		{
 			GameObject[] obj = GameObject.FindGameObjectsWithTag("Pill");
-			if (obj.Length >= 10)
+			
+			if (obj.Length >= 12)
 			{
 				return true;
 			}
@@ -65,12 +67,64 @@ public class Spawner : MonoBehaviour
 
     public IEnumerator Spawn()
 	{
+		GameObject[] obj = GameObject.FindGameObjectsWithTag("Pill");
+		
 		waitFlag = false;
-		int rnd = Random.Range(0, pills.Length);
-		Instantiate(pills[rnd], SpawnTransform.position, Quaternion.identity);
+		// int rnd = Random.Range(0, pills.Length);
+
+		GameObject pillObj = tespitEt();
+		if (pillObj != null)
+			Instantiate(pillObj, SpawnTransform.position, Quaternion.identity);
 		yield return new WaitForSeconds(2);
 		waitFlag = true;
 	}
 
-     
+	private GameObject tespitEt()
+	{
+		List<GameObject> obj = new List<GameObject>();
+		foreach (var item in GameObject.FindGameObjectsWithTag("Pill"))
+		{
+			obj.Add(item);
+		}
+		foreach (var item in GameObject.FindGameObjectsWithTag("SuccessPill"))
+		{
+			obj.Add(item);
+		}
+
+		int pink = 0, green = 0, orange = 0;
+		for (int i = 0; i < obj.Count; i++)
+		{
+			if (obj[i].name.Contains("Pink") == true)
+			{
+				pink++;
+			}
+			else if (obj[i].name.Contains("Green") == true)
+			{
+				green++;
+			}
+			else if (obj[i].name.Contains("Orange") == true)
+			{
+				orange++;
+			}
+		}
+
+		if (pink < 4)
+		{
+			return pills[0];
+		}
+		else if (orange < 4)
+		{
+			return pills[2];
+		}
+		else if (green < 4)
+		{
+			return pills[1];
+		}
+		else
+		{
+			return null;
+		}
+	}
+
+
 }

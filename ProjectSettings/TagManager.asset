@@ -9,6 +9,9 @@ TagManager:
   - Step1
   - Spawner
   - Pill
+  - SuccessPill
+  - Shelves
+  - UI
   layers:
   - Default
   - TransparentFX

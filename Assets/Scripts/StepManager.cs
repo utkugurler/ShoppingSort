@@ -67,7 +67,7 @@ public class StepManager : MonoBehaviour
 		}
 	}
 
-	private void CupActivate(bool flag)
+	public void CupActivate(bool flag)
 	{
 		GameObject[] bottles = GameObject.FindGameObjectsWithTag("Bottle");
 		foreach (var item in bottles)
@@ -107,9 +107,9 @@ public class StepManager : MonoBehaviour
 		{
 			CurrentStep = 1;
 		}
-		else if(steps == STEPS.Step1)
+		else if(steps == STEPS.Step3)
 		{
-			CurrentStep = 3;
+			CurrentStep = 2;
 		}
 		else if(steps == STEPS.StepMenu)
 		{

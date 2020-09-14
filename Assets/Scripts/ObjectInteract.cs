@@ -5,6 +5,7 @@ public class ObjectInteract : MonoBehaviour
 	private StepManager stepManager;
 	private ScoreManager scoreManager;
 	private ColorController colorController;
+	private TouchDragDrop touchDragDrop;
 
 	private int checkStepOne = 2; // 0 olunca sonrakine geçebilir
 
@@ -14,6 +15,7 @@ public class ObjectInteract : MonoBehaviour
 		stepManager = gameManagerObj.GetComponent<StepManager>();
 		scoreManager = gameManagerObj.GetComponent<ScoreManager>();
 		colorController = GameObject.Find("GameManager").GetComponent<ColorController>();
+		touchDragDrop = this.GetComponent<TouchDragDrop>();
 	}
 
 	private void Update()
@@ -29,47 +31,51 @@ public class ObjectInteract : MonoBehaviour
 		int currentStep = stepManager.CurrentStep;
 		if(currentStep == 0)
 		{
-			// İlk stepte yapılacaklar
-			if (other.gameObject.name == this.gameObject.name) // İsimle tagler birse puan artar
+			if(this.gameObject.tag == "UI")
 			{
-				scoreManager.IncreasScore();
-				stepManager.CheckStep(StepManager.STEPS.Step1);
-				if (other.gameObject.name == "Orange")
+				// İlk stepte yapılacaklar
+				if (other.gameObject.name == this.gameObject.name) // İsimle tagler birse puan artar
 				{
-					for (int i = 0; i < other.transform.childCount; i++)
+					scoreManager.IncreasScore();
+					stepManager.CheckStep(StepManager.STEPS.Step1);
+					if (other.gameObject.name == "Orange")
 					{
-						if(other.transform.GetChild(i).name == "bottle")
+						for (int i = 0; i < other.transform.childCount; i++)
 						{
-							other.transform.GetChild(i).GetComponent<MeshRenderer>().material = colorController.GetMaterial(ColorController.COLOR.ORANGE);
+							if (other.transform.GetChild(i).name == "bottle")
+							{
+								other.transform.GetChild(i).GetComponent<MeshRenderer>().material = colorController.GetMaterial(ColorController.COLOR.ORANGE);
+							}
 						}
 					}
-				}
-				else if (other.gameObject.name == "Pink")
-				{
-					for (int i = 0; i < other.transform.childCount; i++)
+					else if (other.gameObject.name == "Pink")
 					{
-						if (other.transform.GetChild(i).name == "bottle")
+						for (int i = 0; i < other.transform.childCount; i++)
 						{
-							other.transform.GetChild(i).GetComponent<MeshRenderer>().material = colorController.GetMaterial(ColorController.COLOR.PINK);
+							if (other.transform.GetChild(i).name == "bottle")
+							{
+								other.transform.GetChild(i).GetComponent<MeshRenderer>().material = colorController.GetMaterial(ColorController.COLOR.PINK);
+							}
 						}
 					}
-				}
-				else if (other.gameObject.name == "Green")
-				{
-					for (int i = 0; i < other.transform.childCount; i++)
+					else if (other.gameObject.name == "Green")
 					{
-						if (other.transform.GetChild(i).name == "bottle")
+						for (int i = 0; i < other.transform.childCount; i++)
 						{
-							other.transform.GetChild(i).GetComponent<MeshRenderer>().material = colorController.GetMaterial(ColorController.COLOR.GREEN);
+							if (other.transform.GetChild(i).name == "bottle")
+							{
+								other.transform.GetChild(i).GetComponent<MeshRenderer>().material = colorController.GetMaterial(ColorController.COLOR.GREEN);
+							}
 						}
 					}
+					Destroy(this.gameObject);
 				}
-				Destroy(this.gameObject);
+				else
+				{
+					scoreManager.DescreasScore();
+				}
 			}
-			else
-			{
-				scoreManager.DescreasScore();
-			}
+			
 		}
 		else if (currentStep == 1)
 		{
@@ -81,16 +87,44 @@ public class ObjectInteract : MonoBehaviour
 				{
 					this.gameObject.transform.parent = other.gameObject.transform;
 					//other.transform.parent = this.gameObject.transform;
+
+					this.gameObject.transform.tag = "SuccessPill";
+
+					scoreManager.IncreasScore();
+					bool flag = SearchPill();
+
+					if(flag == true)
+					{
+						stepManager.ChangeStep(StepManager.STEPS.Step3);
+						stepManager.CupActivate(true);
+					}
+					else
+					{
+
+					}
+
 				}
 				else
 				{
 					Destroy(this.gameObject);
+					scoreManager.DescreasScore();
 				}
 			}
 		}
 		else if (currentStep == 2)
 		{
-
+			if (touchDragDrop.dragging == false)
+			{
+				if (this.gameObject.name == other.gameObject.name)
+				{
+					// Işınla
+					Debug.Log("Başarılı");
+				}
+				else
+				{
+					// puan düş yanlış de
+				}
+			}
 		}
 		else
 		{
@@ -98,8 +132,19 @@ public class ObjectInteract : MonoBehaviour
 		}
 	}
 
-	private void OnTriggerExit(Collider other)
+	private bool SearchPill()
 	{
-		
+		GameObject[] objs = GameObject.FindGameObjectsWithTag("SuccessPill");
+
+		if(objs.Length == 12)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 }
+
+
