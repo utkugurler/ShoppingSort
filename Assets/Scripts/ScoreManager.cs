@@ -29,12 +29,12 @@ public class ScoreManager : MonoBehaviour
 
     public void IncreasScore()
 	{
-        Score += increasePoint;
+        Score += increasePoint; // Skoru yükseltme
     }
 
     public void DescreasScore()
 	{
-        Score -= descreasePoint;
+        Score -= descreasePoint; // Skoru düşürme
 
         if(Score < 0)
 		{

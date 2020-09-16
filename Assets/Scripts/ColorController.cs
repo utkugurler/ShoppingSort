@@ -13,6 +13,7 @@ public class ColorController : MonoBehaviour
 
 	public Material[] materials;
 
+	// Gelen renge göre materyali döndürüyor
 	public Material GetMaterial(COLOR color)
 	{
 		if(color == COLOR.GREEN)

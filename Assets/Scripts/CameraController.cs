@@ -21,7 +21,7 @@ public class CameraController : MonoBehaviour
 
     void Update()
     {
-        int currentStep = stepManager.CurrentStep;
+        int currentStep = stepManager.CurrentStep; // Şu anki stepi çekip ona göre kamerayı konumlandırıyor
         if (currentStep == -1)
         {
             currentView = views[0];

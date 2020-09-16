@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// Şişeleri kod ile hareket ettirme sınıfı
 public class AnimatorController : MonoBehaviour
 {
 	float lerpTime = 2;
@@ -15,6 +16,8 @@ public class AnimatorController : MonoBehaviour
 	private void Start()
 	{
 		// bottlesObject = GameObject.Find("Bottles");
+		
+		/* Ne kadar hareket noktası varsa onları alıyoruz */
 		length = transforms.Length;
 	}
 
@@ -27,7 +30,7 @@ public class AnimatorController : MonoBehaviour
 	{
 		if(fire == true)
 		{
-			if(posIndex != 1)
+			if(posIndex != 1) // Eğer 1 değilse normal hıza dön hareket ederken ikinci noktada ışınlanması gerekiyor onun için oynama yaptım.
 				lerpTime = 2;
 
 			float a = Mathf.Round(bottlesObject.transform.position.x);
@@ -41,13 +44,13 @@ public class AnimatorController : MonoBehaviour
 				posIndex++;
 				if (posIndex == 1)
 				{
-					lerpTime = 1000;
+					lerpTime = 1000; // 1 de ışınlanması için yaptım.
 				}
 				if (posIndex == 3)
 				{
 					fire = false;
 				}
-				posIndex = (posIndex >= length) ? 0 : posIndex;
+				posIndex = (posIndex >= length) ? 0 : posIndex; // posIndex sınıra ulaşırsa 0a geri donduruyorum
 			}
 			// transform.position += transforms[0].position * 2 * Time.deltaTime;
 

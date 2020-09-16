@@ -27,21 +27,19 @@ public class ObjectInteract : MonoBehaviour
 		animatorController = GameObject.Find("GameManager").GetComponent<AnimatorController>();
 
 		touchDragDrop = this.GetComponent<TouchDragDrop>();
-		collide = stepManager.collidersStep3;
+		collide = stepManager.collidersStep3; // Son step için yerleştirme triggerlarını tespit ediyoruz
 	}
 
 	private void Update()
 	{
-		if(checkStepOne == 0)
+		if(checkStepOne == 0) // İlk step
 		{
 			stepManager.ChangeStep(StepManager.STEPS.Step2);
 			animatorController.ChangeBottleTransform();
-
 		}
 
-		if (step3TriggerFlag == true && touchDragDrop.GetDrag() == false)
+		if (step3TriggerFlag == true && touchDragDrop.GetDrag() == false) 
 		{
-			
 			Step3TransformDirect(this.gameObject.name);
 			
 		}
@@ -66,39 +64,37 @@ public class ObjectInteract : MonoBehaviour
 
 	private void Step3TransformDirect(string name)
 	{
+		// Son stepte şişeleri renklerine göre ışınlıyoruz
 		if (name == "Orange")
 		{
-			// step3Transforms[0]
-			//Lerp position
 			Transform currentView = step3Transforms[0];
-			//transform.position = Vector3.Lerp(transform.position, currentView.position, 2 * Time.deltaTime);
 			transform.position = currentView.position;
 		}
 		else if (name == "Pink")
 		{
 			Transform currentView = step3Transforms[1];
-			//transform.position = Vector3.Lerp(transform.position, currentView.position, 2 * Time.deltaTime);
 			transform.position = currentView.position;
 		}
 		else if (name == "Green")
 		{
 			Transform currentView = step3Transforms[2];
-			//transform.position = Vector3.Lerp(transform.position, currentView.position, 2 * Time.deltaTime);
 			transform.position = currentView.position;
 		}
 	}
 
 	private void OnTriggerEnter(Collider other)
 	{
-		int currentStep = stepManager.CurrentStep;
-		bool getDrag = touchDragDrop.GetDrag();
-		if (currentStep == 0)
+		int currentStep = stepManager.CurrentStep; // hangi stepte olduğunu öğrenip işlem yapacak
+		// bool getDrag = touchDragDrop.GetDrag(); 
+		if (currentStep == 0) 
 		{
 			if(this.gameObject.tag == "UI")
 			{
 				// İlk stepte yapılacaklar
+				
 				if (other.gameObject.name == this.gameObject.name) // İsimle tagler birse puan artar
 				{
+					// Şişelerin renklerini aktarma yapıldı
 					scoreManager.IncreasScore();
 					stepManager.CheckStep(StepManager.STEPS.Step1);
 					if (other.gameObject.name == "Orange")
@@ -107,7 +103,7 @@ public class ObjectInteract : MonoBehaviour
 						{
 							if (other.transform.GetChild(i).name == "bottle")
 							{
-								other.transform.GetChild(i).GetComponent<MeshRenderer>().material = colorController.GetMaterial(ColorController.COLOR.ORANGE);
+								other.transform.GetChild(i).GetComponent<MeshRenderer>().material = colorController.GetMaterial(ColorController.COLOR.ORANGE); 
 							}
 						}
 					}
@@ -152,16 +148,16 @@ public class ObjectInteract : MonoBehaviour
 					//other.transform.parent = this.gameObject.transform;
 
 					this.gameObject.transform.tag = "SuccessPill";
-					StartCoroutine(KinematicFalseWait());
+					StartCoroutine(KinematicFalseWait()); // Kinematiği hemen yaptırmıyorum biraz bekletip şişenin içerisinde düzgün bir konuma gelmesi için
 					scoreManager.IncreasScore();
-					bool flag = SearchPill();
+					bool flag = SearchPill(); // 12 tane successpill var ise artık son stepe geçebilir
 
 					if(flag == true)
 					{
 						animatorController.ChangeBottleTransform();
 
 						stepManager.ChangeStep(StepManager.STEPS.Step3);
-						StartCoroutine(stepManager.CupActivate(true));
+						StartCoroutine(stepManager.CupActivate(true)); // Kapakları açıp kapatırken biraz bekletiyorumki animasyon geçişlerinde kapanmış gibi gözüksün
 					}
 					else
 					{
@@ -210,22 +206,17 @@ public class ObjectInteract : MonoBehaviour
 		}
 	}
 
+	private void OnTriggerExit(Collider other)
+	{
+		// int currentStep = stepManager.CurrentStep;
+	}
+
 	private IEnumerator KinematicFalseWait()
 	{
 
 		yield return new WaitForSeconds(2);
 		this.GetComponent<Rigidbody>().isKinematic = true;
 
-	}
-
-	private void OnTriggerExit(Collider other)
-	{
-		int currentStep = stepManager.CurrentStep;
-
-		if (currentStep == 2)
-		{
-			// step3TriggerFlag = false;
-		}
 	}
 
 	private bool SearchPill()

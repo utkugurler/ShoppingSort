@@ -34,7 +34,7 @@ public class TouchDragDrop : MonoBehaviour
 	{
 		zPosition = camera.WorldToScreenPoint(transform.position).z;
 
-		if (stepManager.CurrentStep == 0)
+		if (stepManager.CurrentStep == 0) // İlk stepte sadece UIlar hareket edeceği için şişelerin hareketini engelledim
 		{
 			// 0' da ui hareket ederek şişelere gider
 			if (this.gameObject.tag == "Bottle")
@@ -42,7 +42,7 @@ public class TouchDragDrop : MonoBehaviour
 				dragging = false;
 			}
 		}
-		else if(stepManager.CurrentStep == 1)
+		else if(stepManager.CurrentStep == 1) // Sonraki stepteyse sadece ilaçlar hareket edecek
 		{
 			// Hapları şişelerin ucuna götürür
 			if(this.gameObject.tag == "Bottle")
@@ -53,8 +53,8 @@ public class TouchDragDrop : MonoBehaviour
 			{
 				if (dragging == true)
 				{
-					zPosition = camera.WorldToScreenPoint(new Vector3(0, 0, 0)).z;
-					rb.isKinematic = true;
+					zPosition = camera.WorldToScreenPoint(new Vector3(0, 0, 0)).z; // İlaçları şişelere denk getirecek şekilde getirdim.
+					rb.isKinematic = true; // Kinematic yaptımki tutunca yerçekiminden dolayı bozulmasın
 				}
 				else
 				{
@@ -76,10 +76,10 @@ public class TouchDragDrop : MonoBehaviour
 			transform.position = camera.ScreenToWorldPoint(position + new Vector3(offset.x, offset.y));
 			
 			if(stepManager.CurrentStep == 1)
-				transform.rotation = new Quaternion(0, 90, 0, 0);
+				transform.rotation = new Quaternion(0, 90, 0, 0); // İlaçları tutunca düzgün bir şekilde gelmesi için rotasyonu oynadım.
 		}
 	}
-
+	// Tutma kodları
 	private void OnMouseDown()
 	{
 		if(dragging == false)
@@ -92,7 +92,7 @@ public class TouchDragDrop : MonoBehaviour
 	{
 		EndDrag();
 	}
-
+	
 	public void BeginDrag()
 	{
 		OnBeginDrag.Invoke();

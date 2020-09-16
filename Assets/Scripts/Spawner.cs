@@ -66,9 +66,7 @@ public class Spawner : MonoBehaviour
 	}
 
     public IEnumerator Spawn()
-	{
-		GameObject[] obj = GameObject.FindGameObjectsWithTag("Pill");
-		
+	{	
 		waitFlag = false;
 		// int rnd = Random.Range(0, pills.Length);
 
@@ -81,6 +79,7 @@ public class Spawner : MonoBehaviour
 
 	private GameObject tespitEt()
 	{
+		// Ekrandaki şişelere yerleşmiş ve yerleşmemiş ilaçları getiriyoruz buna göre spawn işlemi yapacak
 		List<GameObject> obj = new List<GameObject>();
 		foreach (var item in GameObject.FindGameObjectsWithTag("Pill"))
 		{
