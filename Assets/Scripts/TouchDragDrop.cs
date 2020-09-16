@@ -11,7 +11,7 @@ public class TouchDragDrop : MonoBehaviour
     private Vector3 offset;
     private Camera camera;
 	private Rigidbody rb;
-    public bool dragging = false; // TODO: Kategoriye göre draggable kapama açmaları kontrol edeceğiz!
+    private bool dragging = false; // TODO: Kategoriye göre draggable kapama açmaları kontrol edeceğiz!
 
 	[Space]
 	[SerializeField]
@@ -66,7 +66,7 @@ public class TouchDragDrop : MonoBehaviour
 		{
 			
 				//dragging = true;
-				zPosition = camera.WorldToScreenPoint(new Vector3(0, 0, 59)).z;
+				zPosition = camera.WorldToScreenPoint(new Vector3(0, 0, 49)).z;
 			
 		}
 
@@ -74,6 +74,9 @@ public class TouchDragDrop : MonoBehaviour
 		{
 			Vector3 position = new Vector3(Input.mousePosition.x, Input.mousePosition.y, zPosition);
 			transform.position = camera.ScreenToWorldPoint(position + new Vector3(offset.x, offset.y));
+			
+			if(stepManager.CurrentStep == 1)
+				transform.rotation = new Quaternion(0, 90, 0, 0);
 		}
 	}
 
@@ -101,5 +104,10 @@ public class TouchDragDrop : MonoBehaviour
 	{
 		OnEndDrag.Invoke();
 		dragging = false;
+	}
+
+	public bool GetDrag()
+	{
+		return dragging;
 	}
 }

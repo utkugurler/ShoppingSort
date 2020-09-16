@@ -15,15 +15,22 @@ public class StepManager : MonoBehaviour
 	#region PRIVATE VARIABLES
 	private int stepCount;
 	private int[] checkers = new int[3] { 3, 12, 3 };
+	private AnimatorController animatorController;
 	#endregion
 
 	#region PUBLIC VARIABLES
 	public int CurrentStep;
+	public Animator animator;
 	public GameObject[] StepEnvironments;
+	public BoxCollider[] collidersStep3;
+	public TouchDragDrop touchDragDrop;
+	public bool[] step3Flags = new bool[3] { false, false, false };
+	public GameObject finalPanel;
 	#endregion
 
 	private void Start()
 	{
+		animatorController = GameObject.Find("GameManager").GetComponent<AnimatorController>();
 		stepCount = StepEnvironments.Length;
 	}
 
@@ -40,14 +47,18 @@ public class StepManager : MonoBehaviour
 					ChangeStep(STEPS.Step2);
 					checkers[(int)STEPS.Step1] = -1;
 					// İkinci levelda kapaklar olmayacağından gizliyoruz sahnedekilerini
-					CupActivate(false);
+					StartCoroutine(CupActivate(false));
+					animatorController.ChangeBottleTransform();
+
 				}
 				else if (checkers[(int)STEPS.Step2] == 0)
 				{
 					ChangeStep(STEPS.Step3);
 					checkers[(int)STEPS.Step2] = -1;
-					CupActivate(true);
+					StartCoroutine(CupActivate(true));
 					PillRigidbodyGravityActivate(false);
+					animatorController.ChangeBottleTransform();
+
 				}
 				else if(checkers[(int)STEPS.Step3] == 0)
 				{
@@ -56,19 +67,33 @@ public class StepManager : MonoBehaviour
 				}
 			}
 		}
+
+		if(CurrentStep == 2)
+		{
+
+			if (step3Flags[0] && step3Flags[1] && step3Flags[2])
+				finalPanel.SetActive(true);
+
+		}
+	}
+	public void Step3Increase()
+	{
+		checkers[(int)STEPS.Step3]--;
 	}
 
 	private void PillRigidbodyGravityActivate(bool flag)
 	{
-		GameObject[] objs = GameObject.FindGameObjectsWithTag("Pill");
+		GameObject[] objs = GameObject.FindGameObjectsWithTag("SuccessPill");
 		foreach (var item in objs)
 		{
 			item.GetComponent<Rigidbody>().isKinematic = true;
 		}
 	}
 
-	public void CupActivate(bool flag)
+	public IEnumerator CupActivate(bool flag)
 	{
+		yield return new WaitForSeconds(1);
+
 		GameObject[] bottles = GameObject.FindGameObjectsWithTag("Bottle");
 		foreach (var item in bottles)
 		{

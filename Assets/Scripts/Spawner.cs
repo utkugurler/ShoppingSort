@@ -75,7 +75,7 @@ public class Spawner : MonoBehaviour
 		GameObject pillObj = tespitEt();
 		if (pillObj != null)
 			Instantiate(pillObj, SpawnTransform.position, Quaternion.identity);
-		yield return new WaitForSeconds(2);
+		yield return new WaitForSeconds(1);
 		waitFlag = true;
 	}
 
